@@ -2,7 +2,7 @@
 
 [![Build Status](https://img.shields.io/travis/ordian/toml_document/master.svg?label=linux%20%26%20osx)](
 https://travis-ci.org/ordian/toml_document)
-[![Build Status](https://img.shields.io/appveyor/ci/ordian/toml_document/master.svg?label=windows)](https://ci.appveyor.com/project/ordian/toml-document/branch/master)
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/ordian/toml_document?branch=master&svg=true&passingText=windows%20-%20passing&failingText=windows-%20fails)](https://ci.appveyor.com/project/ordian/toml-document/branch/master)
 
 [Documentation](http://vosen.github.io/toml_document/toml_document)
 
