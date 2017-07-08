@@ -32,7 +32,7 @@ fn fmt_with_markup<T>(f: &mut Formatter, value: &T, markup: &ValueMarkup)
            markup.get_trailing_trivia())
 }
 
-impl Display for Document { 
+impl Display for Document {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         fmt_join(f, self.iter_children(), "")
         .and_then(|_| fmt_join(f, self.iter_containers(), ""))

@@ -258,7 +258,7 @@ impl Document {
     pub fn insert_container<K, S>(&mut self,
                                   idx: usize,
                                   keys: K,
-                                  kind: ContainerKind) -> &mut Container 
+                                  kind: ContainerKind) -> &mut Container
                                   where K:Iterator<Item=S>, S:Into<String> {
         let keys: Vec<_> = keys.map(|x| FormattedKey::new_escaped(x.into()))
                                .collect();
@@ -416,7 +416,7 @@ impl Document {
                                             Document::find_remove_from_parent(next,
                                                                               &keys[1..],
                                                                               container)
-                                        }   
+                                        }
                                         _ => None
                                     }
                                 })
@@ -443,7 +443,7 @@ impl Document {
                                                     Document::find_remove_from_parent(next,
                                                                                       &keys[1..],
                                                                                       container)
-                                                }   
+                                                }
                                                 _ => None
                                             }
                                         })
@@ -541,7 +541,7 @@ impl Document {
             let remov = cmap.get_mut(&path[0])
                             .map(|child| {
                                 let next = IndirectPos::Container(child);
-                                Document::remove_empty_implicits(next, source, &path[1..]) 
+                                Document::remove_empty_implicits(next, source, &path[1..])
                             })
                             .unwrap_or(None);
             match remov {
@@ -674,7 +674,7 @@ impl Document {
         buff
     }
 
-    fn pass_trivia_to_value(&mut self, 
+    fn pass_trivia_to_value(&mut self,
                             idx: usize,
                             mut orphaned_trivia: String) {
         let mut new_node = self.values.kvp_list[idx].borrow_mut();
@@ -682,7 +682,7 @@ impl Document {
         new_node.key.markup.lead = orphaned_trivia;
     }
 
-    fn pass_trivia_to_container(&mut self, 
+    fn pass_trivia_to_container(&mut self,
                                 idx: usize,
                                 mut orphaned_trivia: String) {
         let mut first_container = self.container_list[idx].borrow_mut();
@@ -1028,7 +1028,7 @@ impl ValueNode {
                 )
             }
             Value::InlineArray(..) => {
-                let value_wrapper = unsafe { transmute_lifetime(&*r.borrow()) };                
+                let value_wrapper = unsafe { transmute_lifetime(&*r.borrow()) };
                 EntryRef::Array(
                     ArrayEntry{
                         data: Array::Inline(
@@ -1038,7 +1038,7 @@ impl ValueNode {
                 )
             }
             Value::InlineTable(..) => {
-                let value_wrapper = unsafe { transmute_lifetime(&*r.borrow()) };                
+                let value_wrapper = unsafe { transmute_lifetime(&*r.borrow()) };
                 EntryRef::Table(
                     TableEntry {
                         data: Table::Inline(
@@ -1096,7 +1096,7 @@ impl ValueNode {
             }
             Value::InlineArray(..) => {
                 drop(val_ref);
-                let value_wrapper = unsafe { transmute_lifetime_mut(&mut *r.borrow_mut()) };                
+                let value_wrapper = unsafe { transmute_lifetime_mut(&mut *r.borrow_mut()) };
                 EntryRefMut::Array(
                     ArrayEntryMut {
                         data: ArrayMut::Inline(
@@ -1107,7 +1107,7 @@ impl ValueNode {
             }
             Value::InlineTable(..) => {
                 drop(val_ref);
-                let value_wrapper = unsafe { transmute_lifetime_mut(&mut *r.borrow_mut()) };                
+                let value_wrapper = unsafe { transmute_lifetime_mut(&mut *r.borrow_mut()) };
                 EntryRefMut::Table(
                     TableEntryMut {
                         data: TableMut::Inline(
@@ -1146,7 +1146,7 @@ impl Container {
         self.data.direct.len() + self.data.indirect.len()
     }
 
-    pub fn iter_entries<'a>(&'a self) 
+    pub fn iter_entries<'a>(&'a self)
                         -> Box<Iterator<Item=(&'a str, EntryRef<'a>)>+'a> {
         self.data.iter_logical()
     }
@@ -1179,7 +1179,7 @@ impl Container {
         self.data.direct.get_at_mut(idx).value.markup.trail = "\n".to_owned();
     }
 
-    pub fn insert_string<S1, S2>(&mut self, idx: usize, key: S1, value: S2) 
+    pub fn insert_string<S1, S2>(&mut self, idx: usize, key: S1, value: S2)
                                  -> &mut StringValue
                                  where S1: Into<String>, S2: Into<String> {
         self.data.direct.insert_string(idx, key.into(), value.into());
@@ -1477,7 +1477,7 @@ impl FloatValue {
     }
 
     pub fn set(&mut self, f: f64) {
-        self.0.value = Value::Float { 
+        self.0.value = Value::Float {
             parsed: f,
             raw: format!("{}", f)
 
@@ -1513,7 +1513,7 @@ impl IntegerValue {
     }
 
     pub fn set(&mut self, i: i64) {
-        self.0.value = Value::Integer { 
+        self.0.value = Value::Integer {
             parsed: i,
             raw: format!("{}", i)
 
@@ -1591,7 +1591,7 @@ impl InlineArray {
             _ => unreachable!()
         }
     }
-    
+
     fn data_mut(&mut self) -> &mut InlineArrayData {
         match self.0.value {
             super::Value::InlineArray(ref mut arr_data) => arr_data,
@@ -1629,7 +1629,7 @@ impl InlineArray {
         self.data_mut().values.insert(idx, Box::new(value));
     }
 
-    pub fn insert_string<S:Into<String>>(&mut self, idx: usize, value: S) 
+    pub fn insert_string<S:Into<String>>(&mut self, idx: usize, value: S)
                                          -> &mut StringValue {
         panic_if_wrong_type!(&self.data().values, Value::String(..), "string");
         let node = Value::new_string(value.into());
@@ -1637,7 +1637,7 @@ impl InlineArray {
         Value::get_string(&mut self.data_mut().values[idx])
     }
 
-    pub fn insert_integer<S:Into<String>>(&mut self, idx: usize, value: i64) 
+    pub fn insert_integer<S:Into<String>>(&mut self, idx: usize, value: i64)
                                           -> &mut IntegerValue {
         panic_if_wrong_type!(&self.data().values, Value::Integer{..}, "integer");
         let node = Value::new_integer(value);
@@ -1645,7 +1645,7 @@ impl InlineArray {
         Value::get_integer(&mut self.data_mut().values[idx])
     }
 
-    pub fn insert_float(&mut self, idx: usize, value: f64) 
+    pub fn insert_float(&mut self, idx: usize, value: f64)
                         -> &mut FloatValue {
         panic_if_wrong_type!(&self.data().values, Value::Float{..}, "float");
         let node = Value::new_float(value);
@@ -1663,7 +1663,7 @@ impl InlineArray {
 
     pub fn insert_datetime<S:Into<String>>(&mut self,
                                            idx: usize,
-                                           value: S) 
+                                           value: S)
                                            -> &mut DatetimeValue {
         panic_if_wrong_type!(&self.data().values, Value::Datetime(..), "datetime");
         let node = Value::new_datetime(None, value.into());
@@ -2069,8 +2069,8 @@ impl InlineTable {
         }
     }
 
-    pub fn insert_string<S1, S2>(&mut self, idx: usize, key: S1, value: S2) 
-                                 -> &mut StringValue 
+    pub fn insert_string<S1, S2>(&mut self, idx: usize, key: S1, value: S2)
+                                 -> &mut StringValue
                                  where S1: Into<String>, S2: Into<String> {
         self.data_mut().values.direct.insert_string(idx, key.into(), value.into());
         self.adjust_trivia(idx);
@@ -2221,7 +2221,7 @@ impl KeyMarkup {
             match c {
                 Some(c) => { match c {
                     ' ' | '\t' => { },
-                    '#' => { 
+                    '#' => {
                         chars = eat_before_newline(chars);
                         chars = eat_newline(chars, MALFORMED_LEAD_MSG);
                     },
@@ -2312,7 +2312,7 @@ impl Value {
     fn get_string<'a, 'b>(src: &'a mut FormattedValue) -> &'b mut StringValue {
         unsafe { StringValue::new_mut(transmute_lifetime_mut(src)) }
     }
-    
+
     fn new_integer(value: i64) -> Value {
         Value::Integer{
             raw: value.to_string(),
@@ -2323,7 +2323,7 @@ impl Value {
     fn get_integer<'a, 'b>(src: &'a mut FormattedValue) -> &'b mut IntegerValue {
         unsafe { IntegerValue::new_mut(transmute_lifetime_mut(src)) }
     }
-    
+
     fn new_float(value: f64) -> Value {
         Value::Float{
             raw: value.to_string(),
@@ -2334,7 +2334,7 @@ impl Value {
     fn get_float<'a, 'b>(src: &'a mut FormattedValue) -> &'b mut FloatValue {
         unsafe { FloatValue::new_mut(transmute_lifetime_mut(src)) }
     }
-    
+
     fn new_boolean(value: bool) -> Value {
         Value::Boolean(value)
     }
@@ -2342,7 +2342,7 @@ impl Value {
     fn get_boolean<'a, 'b>(src: &'a mut FormattedValue) -> &'b mut BoolValue {
         unsafe { BoolValue::new_mut(transmute_lifetime_mut(src)) }
     }
-    
+
     fn new_datetime(key: Option<&str>, value: String) -> Value {
         if !Parser::_is_valid_datetime(&value) {
             match key {
@@ -2356,7 +2356,7 @@ impl Value {
     fn get_datetime<'a, 'b>(src: &'a mut FormattedValue) -> &'b mut DatetimeValue {
         unsafe { DatetimeValue::new_mut(transmute_lifetime_mut(src)) }
     }
-    
+
     fn new_array() -> Value {
         Value::InlineArray(
             InlineArrayData {
@@ -2471,7 +2471,7 @@ mod tests {
 
         #[test]
         fn insert_integer_max() {
-            let mut doc = Document::new();            
+            let mut doc = Document::new();
             {
                 let val = doc.insert_integer(0,
                                              "foo",

@@ -97,7 +97,7 @@ impl<'a> TraversalPosition<'a> {
                      -> TraversalPosition {
         TraversalPosition {
             direct: None,
-            indirect: map 
+            indirect: map
         }
     }
 }
@@ -296,7 +296,7 @@ struct InlineArrayData {
 impl Value {
     fn new_table(map: ValuesMap, trail: String) -> Value {
         Value::InlineTable(
-            TableData { 
+            TableData {
                 values: ContainerData {
                     direct: map,
                     indirect: HashMap::new()
@@ -335,7 +335,7 @@ impl Value {
 
 // Entry in the document index. This index is used for traversal (which is
 // heavily used during parsing and adding new elements) and does not preserve
-// ordering, just the structure 
+// ordering, just the structure
 // Some examples:
 //  [a.b]
 //  x="y"
@@ -375,7 +375,7 @@ impl IndirectChild {
 
 #[derive(Debug, Clone)]
 pub struct Container {
-    // Path to the table, including leading trivia 
+    // Path to the table, including leading trivia
     // and trailing trivia up to a newline, eg:
     //  \n                     +
     //  \n                     |- keys
@@ -388,7 +388,7 @@ pub struct Container {
 impl Container {
     fn new_array(data: ContainerData, ks: Vec<FormattedKey>, lead: String)
                      -> Container {
-        Container { 
+        Container {
             data: data,
             keys: ContainerKeys::new(lead, ks),
             kind: ContainerKind::ArrayMember,
@@ -397,7 +397,7 @@ impl Container {
 
     fn new_table(data: ContainerData, ks: Vec<FormattedKey>, lead: String)
                      -> Container {
-        Container { 
+        Container {
             data: data,
             keys: ContainerKeys::new(lead, ks),
             kind: ContainerKind::Table,
@@ -463,7 +463,7 @@ impl ContainerData {
 
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
 pub enum ContainerKind {
-    Table, 
+    Table,
     ArrayMember,
 }
 

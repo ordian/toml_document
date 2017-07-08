@@ -8,7 +8,7 @@ use std::str;
 use std::cell::{RefCell};
 use std::rc::Rc;
 
-use super::{Container, ContainerKind, ContainerData, FormattedValue, FormattedKey, IndirectChild}; 
+use super::{Container, ContainerKind, ContainerData, FormattedValue, FormattedKey, IndirectChild};
 use super::{Document, ValuesMap, TraversalPosition, InlineArrayData};
 use super::Value as DocValue;
 use super::{StringData, TableData};
@@ -134,7 +134,7 @@ impl<'a> Parser<'a> {
     fn newline(&mut self) -> Option<&str> {
         let start = self.next_pos();
         match self.peek(0) {
-            Some((_, '\n')) => { 
+            Some((_, '\n')) => {
                 self.cur.next();
                 Some(&self.input[start..self.next_pos()])
             }
@@ -357,7 +357,7 @@ impl<'a> Parser<'a> {
         }
 
         self.finish_string(start, multiline).map(|x|
-            DocValue::String(StringData { 
+            DocValue::String(StringData {
                 escaped: x,
                 raw: self.input[start..self.next_pos()].to_string()
             })
@@ -519,7 +519,7 @@ impl<'a> Parser<'a> {
                 }
             }
         }
-        let raw = if multiline { 
+        let raw = if multiline {
             format!("'''{}{}'''", newline.unwrap_or_default(), ret)
         } else {
             format!("'{}'", ret)
@@ -663,7 +663,7 @@ impl<'a> Parser<'a> {
         }
     }
 
-    fn datetime(&mut self, start: usize, end_so_far: usize) 
+    fn datetime(&mut self, start: usize, end_so_far: usize)
                 -> Option<DocValue> {
         let mut date = self.input[start..end_so_far].to_owned();
         for _ in 0..15 {
@@ -810,7 +810,7 @@ impl<'a> Parser<'a> {
                                  f:F)
                                  -> Result<U, ParserError>
         where F: FnOnce(TraversalPosition, Vec<FormattedKey>) -> Result<U, ParserError> {
-        if key_idx == keys.len() - 1 { 
+        if key_idx == keys.len() - 1 {
             return f(cur, keys);
         }
         if let Some(Entry::Occupied(mut entry)) =
@@ -893,7 +893,7 @@ impl<'a> Parser<'a> {
                                    keys: Vec<FormattedKey>,
                                    f:F) -> Result<U, ParserError>
                                    where F: FnOnce(TraversalPosition,
-                                                   Vec<FormattedKey>) 
+                                                   Vec<FormattedKey>)
                                                    -> Result<U, ParserError> {
         Parser::insert_exec_recurse(r.traverse(), idx, arrays, keys, 0, f)
     }
@@ -909,7 +909,7 @@ impl<'a> Parser<'a> {
         } else {
             None
         }
-        
+
     }
 
     fn try_insert_table(mut entry: OccupiedEntry<String, IndirectChild>,
@@ -953,7 +953,7 @@ impl<'a> Parser<'a> {
     }
 
     #[doc(hidden)]
-    pub fn _insert_table(root: &mut Document, idx: usize, keys: Vec<FormattedKey>, 
+    pub fn _insert_table(root: &mut Document, idx: usize, keys: Vec<FormattedKey>,
                          table: ContainerData, lead: String) -> Option<ParserError> {
         let array_map = Parser::build_array_map(root, idx);
         let added = Parser::insert_exec_container(root, idx, array_map.as_ref(), keys, |seg, keys| {
@@ -982,17 +982,17 @@ impl<'a> Parser<'a> {
             match seg.indirect.entry(key_text) {
                 Entry::Occupied(entry)
                     => Parser::try_insert_table(entry, container),
-                Entry::Vacant(entry) 
+                Entry::Vacant(entry)
                     => Parser::add_table(entry, container.clone())
             }
         });
         match added {
-            Result::Ok(ptr) => { 
+            Result::Ok(ptr) => {
                 root.container_list.insert(idx, ptr);
                 None
             }
             Result::Err(err) => Some(err)
-        } 
+        }
     }
 
     fn try_insert_array(mut entry: OccupiedEntry<String, IndirectChild>,
@@ -1064,7 +1064,7 @@ impl<'a> Parser<'a> {
             }
         });
         match added {
-            Result::Ok(ptr) => { 
+            Result::Ok(ptr) => {
                 root.container_list.insert(idx, ptr);
                 None
             }
