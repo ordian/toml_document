@@ -116,7 +116,7 @@ impl<'a> TraversalPosition<'a> {
 //         +
 //         |- trail
 //         +
-#[derive(Default)]
+#[derive(Default, Debug, Clone)]
 pub struct Document {
     values: ValuesMap,
     // List of containers: tables and arrays that are present in the document.
@@ -145,7 +145,7 @@ impl Document {
 //         +
 //         |- kvp_list[1]
 //  x="y"  +
-#[derive(Default)]
+#[derive(Default, Debug, Clone)]
 struct ValuesMap {
     // key-value pairs stored in the order they appear in a document
     kvp_list: Vec<Rc<RefCell<ValueNode>>>,
@@ -195,6 +195,7 @@ impl ValuesMap {
 // +---+ +------------+
 //   |         |
 //  key      value
+#[derive(Debug, Clone)]
 struct ValueNode {
     key: FormattedKey,
     value: FormattedValue
@@ -205,6 +206,7 @@ struct ValueNode {
 //    +----------++-------++----------+
 //         |          |          |
 //    markup.lead   value  markup.trail
+#[derive(Debug, Clone)]
 struct FormattedValue {
     value: Value,
     markup: ValueMarkup
@@ -222,6 +224,7 @@ impl FormattedValue {
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct ValueMarkup {
     // auxiliary text between the equality sign and the value
     lead: String,
@@ -229,6 +232,7 @@ pub struct ValueMarkup {
     trail: String
 }
 
+#[derive(Debug, Clone)]
 struct StringData {
     escaped: String,
     raw: String
@@ -266,11 +270,13 @@ impl StringData {
     }
 }
 
+#[derive(Debug, Clone)]
 struct TableData {
     values: ContainerData,
     comma_trail: String
 }
 
+#[derive(Debug, Clone)]
 enum Value {
     String(StringData),
     Integer { parsed: i64, raw: String },
@@ -281,6 +287,7 @@ enum Value {
     InlineTable(TableData)
 }
 
+#[derive(Debug, Clone)]
 struct InlineArrayData {
     values: Vec<Box<FormattedValue>>,
     comma_trail: String
@@ -339,6 +346,7 @@ impl Value {
 //  [a]
 // Document above contains single explicit table [a], which in turn contains
 // single explicit table [a.b].
+#[derive(Debug, Clone)]
 enum IndirectChild {
     ImplicitTable(HashMap<String, IndirectChild>),
     ExplicitTable(Rc<RefCell<Container>>),
@@ -365,6 +373,7 @@ impl IndirectChild {
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct Container {
     // Path to the table, including leading trivia 
     // and trailing trivia up to a newline, eg:
@@ -396,6 +405,7 @@ impl Container {
     }
 }
 
+#[derive(Debug, Clone)]
 struct ContainerKeys {
     // trivia before `self.vec`
     lead: String,
@@ -429,6 +439,7 @@ impl ContainerKeys {
 // In the document above, table container [a] contains single direct child
 // (x="y") and single indirect child (table container [a.b])
 #[doc(hidden)]
+#[derive(Debug, Clone)]
 pub struct ContainerData {
     direct: ValuesMap,
     indirect: HashMap<String, IndirectChild>
@@ -450,19 +461,21 @@ impl ContainerData {
     }
 }
 
-#[derive(PartialEq, Eq, Hash, Copy, Clone)]
+#[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
 pub enum ContainerKind {
     Table, 
     ArrayMember,
 }
 
 #[doc(hidden)]
+#[derive(Debug, Clone)]
 pub struct FormattedKey {
     escaped: String,
     raw: Option<String>,
     markup: PrivKeyMarkup
 }
 
+#[derive(Debug, Clone)]
 struct PrivKeyMarkup {
     lead: String,
     trail: String
